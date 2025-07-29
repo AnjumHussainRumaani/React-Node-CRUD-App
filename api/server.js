@@ -1,7 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const serverless = require('serverless-http');
 
 const app = express();
 app.use(cors());
@@ -51,7 +50,7 @@ app.post('/login', (req, res) => {
     return res.status(401).json({ message: 'Wrong password' });
 
   const token = jwt.sign({ email }, SECRET, { expiresIn: '1h' });
-  res.json({ token, email }); // Return email for frontend
+  res.json({ token, email });
 });
 
 // Get all items
@@ -96,4 +95,8 @@ app.delete('/items/:id', authenticate, (req, res) => {
   res.status(204).json({ message: 'Item deleted' });
 });
 
-module.exports = serverless(app);
+// Start local server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
